@@ -2,9 +2,10 @@
   keychainbridge.cpp
   Keychain authentication bridge
   -------------------
-         begin                : [PluginDate]
-         copyright            : [(C) Your Name and Date]
-         email                : [Your Email]
+  begin                : Nov 21, 2016
+  copyright            : (C) 2016 Boundless Spatial Inc.
+  author               : Alessandro Pasotti
+  email                : apasotti@boundlessgeo.com
 
  ***************************************************************************
  *                                                                         *
@@ -77,7 +78,8 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
     mVerificationError( false ),
     mErrorMessage(""),
     mIsDirty( true ),
-    mAuthManager( nullptr )
+    mAuthManager( nullptr ),
+    mUseWalletAction( nullptr )
 {
   // Read settings
   readSettings();
@@ -135,13 +137,14 @@ void KeyChainBridge::initGui()
   action = new QAction( tr("Store/update the master password in your wallet"), mQGisIface->mainWindow());
   connect( action, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered()) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
-  action = new QAction( tr("Delete master password from wallet"), mQGisIface->mainWindow());
+  action = new QAction( tr("Delete master password from the wallet"), mQGisIface->mainWindow());
   connect( action, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered()) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
-  action = new QAction( tr("Toggle use wallet"), mQGisIface->mainWindow());
-  connect( action, SIGNAL( triggered() ), this, SLOT( on_toggleUseWallet_triggered()) );
-  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
-
+  mUseWalletAction = new QAction( tr("Enable the wallet"), mQGisIface->mainWindow());
+  mUseWalletAction->setCheckable( true);
+  mUseWalletAction->setChecked( mUseWallet );
+  connect( mUseWalletAction, SIGNAL( changed() ), this, SLOT( on_useWallet_changed()) );
+  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), mUseWalletAction );
 
 }
 //method defined in interface
@@ -211,16 +214,23 @@ void KeyChainBridge::on_deleteMasterPassword_triggered()
   bool ok = deleteMasterPassword();
   mMasterPassword = "";
   setIsDirty( true );
-  showInfo( ok ? tr("The master password has been successfully removed from your wallet") :
-                 tr("There was an error deleting the master password from your wallet: %1").arg( errorMessage()));
+  if ( ok )
+  {
+    showInfo( tr("The master password has been successfully removed from your wallet") );
+  }
+  else
+  {
+    setErrorMessage( tr("There was an error deleting the master password from your wallet: %1").arg( errorMessage()));
+    showError();
+  }
 }
 
-void KeyChainBridge::on_toggleUseWallet_triggered()
+void KeyChainBridge::on_useWallet_changed()
 {
-  mUseWallet = ! mUseWallet;
+  mUseWallet = mUseWalletAction->isChecked();
   writeSettings();
-  showInfo( mUseWallet ? tr( "Your wallet will be used from now on to store and retrieve the master password") :
-                         tr( "Your wallet will not be used anymore to store and retrieve the master password"));
+  showInfo( mUseWallet ? tr( "Your wallet will be <b>used from now</b> on to store and retrieve the master password") :
+                         tr( "Your wallet will <b>not be used anymore</b> to store and retrieve the master password"));
 }
 
 bool KeyChainBridge::deleteMasterPassword()
@@ -264,9 +274,19 @@ bool KeyChainBridge::eventFilter(QObject *obj, QEvent *event)
       if ( ! password.isEmpty() )
       {
         QLineEdit* leMasterPass =  credentials->findChild<QLineEdit*>("leMasterPass");
-        leMasterPass->setText( mMasterPassword );
-        QTimer::singleShot(0, credentials, SLOT(accept()));
-        showInfo( tr("Master password has been successfully inserted from wallet!") );
+        // Hackish!!!
+        if ( leMasterPass->styleSheet() != "QLineEdit{color: rgb(200, 0, 0);}" )
+        {
+          leMasterPass->setText( password );
+          QTimer::singleShot(0, credentials, SLOT(accept()));
+          showInfo( tr("Master password has been successfully inserted from wallet!") );
+        }
+        else
+        {
+          setErrorMessage( "It seems like the password stored in the wallet is no longer valid" );
+          setIsDirty( true );
+          mMasterPassword = "";
+        }
       } else { // We've got an error
         showError();
       }

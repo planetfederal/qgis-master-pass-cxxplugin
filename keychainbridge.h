@@ -1,9 +1,10 @@
 /***************************************************************************
     keychainbridge.h
     -------------------
-    begin                : Jan 21, 2004
-    copyright            : (C) 2004 by Tim Sutton
-    email                : tim@linfiniti.com
+    begin                : Nov 21, 2016
+    copyright            : (C) 2016 Boundless Spatial Inc.
+    author               : Alessandro Pasotti
+    email                : apasotti@boundlessgeo.com
 
  ***************************************************************************/
 
@@ -15,23 +16,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/***************************************************************************
- *   QGIS Programming conventions:
- *
- *   mVariableName - a class level member variable
- *   sVariableName - a static class level member variable
- *   variableName() - accessor for a class member (no 'get' in front of name)
- *   setVariableName() - mutator for a class member (prefix with 'set')
- *
- *   Additional useful conventions:
- *
- *   theVariableName - a method parameter (prefix with 'the')
- *   myVariableName - a locally declared variable within a method ('my' prefix)
- *
- *   DO: Use mixed case variable names - myVariableName
- *   DON'T: separate variable names using underscores: my_variable_name (NO!)
- *
- * **************************************************************************/
+
 #ifndef KeyChainBridge_H
 #define KeyChainBridge_H
 
@@ -107,7 +92,7 @@ class KeyChainBridge: public QObject, public QgisPlugin
    void on_saveMasterPassword_triggered();
 
    //! Toggle plugin activation ( saved in the settings )
-   void on_toggleUseWallet_triggered();
+   void on_useWallet_changed();
 
 
   protected:
@@ -214,6 +199,8 @@ class KeyChainBridge: public QObject, public QgisPlugin
 
     //! Wallet folder in the wallets
     static const QLatin1String sWalletFolderName;
+
+    QAction* mUseWalletAction;
 };
 
 #endif //KeyChainBridge_H

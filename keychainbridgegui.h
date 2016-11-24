@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2003 by Tim Sutton                                      *
- *   tim@linfiniti.com                                                     *
+ *   Copyright (C) 2016 by Boundless Spatial                               *
+ *   apasotti@boundlessgeo.com                                             *
  *                                                                         *
  *   This is a plugin generated from the QGIS plugin template              *
  *                                                                         *
