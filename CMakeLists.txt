@@ -55,7 +55,6 @@ find_path(QTKEYCHAIN_INCLUDE_DIR
 message(STATUS "Found QTKEYCHAIN_INCLUDE_DIR: " ${QTKEYCHAIN_INCLUDE_DIR})
 
 message(STATUS "Found QTKEYCHAIN_LIBRARY: " ${QTKEYCHAIN_LIBRARY})
-# /usr/local/lib/x86_64-linux-gnu/libqtkeychain.a
 
 
 # include ui built headers

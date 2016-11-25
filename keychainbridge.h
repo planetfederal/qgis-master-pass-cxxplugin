@@ -62,7 +62,7 @@ class KeyChainBridge: public QObject, public QgisPlugin
     //! init the gui
     virtual void initGui();
     //! Show the dialog box
-    void run();
+    void about();
     //! unload the plugin
     void unload();
     //! show the help document

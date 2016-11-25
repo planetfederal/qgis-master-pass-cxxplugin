@@ -135,21 +135,21 @@ void KeyChainBridge::initGui()
 {
 
   // Create the action for tool
-  mQActionPointer = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "KeyChain" ), this );
+  mQActionPointer = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "About KeyChain plugin" ), this );
   mQActionPointer->setObjectName( "mQActionPointer" );
   // Set the what's this text
   mQActionPointer->setWhatsThis( tr( "Store the master password in your wallet" ) );
   // Connect the action to the run
-  connect( mQActionPointer, SIGNAL( triggered() ), this, SLOT( run() ) );
+  connect( mQActionPointer, SIGNAL( triggered() ), this, SLOT( about() ) );
   // Add the icon to the toolbar
-  mQGisIface->addToolBarIcon( mQActionPointer );
+  // mQGisIface->addToolBarIcon( mQActionPointer );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), mQActionPointer );
 
   QAction* action;
-  action = new QAction( tr( "Store/update the master password in your wallet" ), mQGisIface->mainWindow() );
+  action = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your wallet" ), mQGisIface->mainWindow() );
   connect( action, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered() ) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
-  action = new QAction( tr( "Delete master password from the wallet" ), mQGisIface->mainWindow() );
+  action = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Delete master password from the wallet" ), mQGisIface->mainWindow() );
   connect( action, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered() ) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
 
@@ -395,7 +395,7 @@ void KeyChainBridge::askSaveMasterPassword( QString message )
 
 bool KeyChainBridge::passwordIsSame( QString password )
 {
-  // Note that this my fail if the DB is not open
+  // Note that this may fail if the DB is not open
   return mAuthManager->masterPasswordSame( password );
 }
 
@@ -457,9 +457,10 @@ bool KeyChainBridge::storeMasterPassword( QString password )
  */
 void KeyChainBridge::saveMasterPassword()
 {
-  if ( ! mAuthManager->masterPasswordIsSet() )
+  if ( ! mAuthManager->masterPasswordIsSet() || ! passwordIsSame( masterPassword() ) )
   {
     mVerificationError = true; // Prevent the password being inserted from the wallet if it's already there
+    mAuthManager->clearMasterPassword();
     mAuthManager->setMasterPassword( true );
   }
   if ( ! masterPassword().isEmpty() )
@@ -475,7 +476,7 @@ void KeyChainBridge::saveMasterPassword()
   }
   else
   {
-    setErrorMessage( tr( "Could not retrieve the master password" ) );
+    setErrorMessage( tr( "Could not retrieve the master password from the wallet" ) );
     showError( );
   }
 }
@@ -498,7 +499,7 @@ void KeyChainBridge::showInfo( QString message )
 // If you created more menu items / toolbar buttons in initiGui, you should
 // create a separate handler for each action - this single run() method will
 // not be enough
-void KeyChainBridge::run()
+void KeyChainBridge::about()
 {
   KeyChainBridgeGui *myPluginGui = new KeyChainBridgeGui( mQGisIface->mainWindow(), QgisGui::ModalDialogFlags );
   myPluginGui->setAttribute( Qt::WA_DeleteOnClose );

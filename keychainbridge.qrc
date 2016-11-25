@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/keychainbridge">
         <file>keychainbridge.svg</file>
+        <file>trashcan.svg</file>
+        <file>save.svg</file>
     </qresource>
 </RCC>
