@@ -27,10 +27,10 @@ item.
 
 The plugin will try to retrieve the password from the wallet and keep it in
 sync automatically, but in a few cases it cannot detect a master password change
-ant it will need the user to enter the master password again in order to capture
+and it will need the user to enter the master password again in order to capture
 and store it.
 
-If the plugin is installed when the master password has already been entered by
+If the plugin is enabled when the master password has already been entered by
 the user, it will prompt the user to store the password in the wallet.
 
 In any case the plugin detects that the password is not synced (like in the case of

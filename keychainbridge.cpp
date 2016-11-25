@@ -149,7 +149,7 @@ void KeyChainBridge::initGui()
   action = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your wallet" ), mQGisIface->mainWindow() );
   connect( action, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered() ) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
-  action = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Delete master password from the wallet" ), mQGisIface->mainWindow() );
+  action = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Clear the master password from your wallet" ), mQGisIface->mainWindow() );
   connect( action, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered() ) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
 
