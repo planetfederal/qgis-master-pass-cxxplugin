@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/keychainbridge/" >
-        <file>keychainbridge.png</file>
+    <qresource prefix="/keychainbridge">
+        <file>keychainbridge.svg</file>
     </qresource>
 </RCC>

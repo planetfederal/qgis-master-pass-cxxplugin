@@ -1,7 +1,6 @@
-KeyChain Authmanager Bridge
----------------------------
+# KeyChain Authmanager Bridge
 
-This plugin enables storage and synchronization of the master pasword with
+This plugin enables storage and synchronization of the master password with
 an external wallet.
 
 It is based on the cross-platform [QtKeychain library](https://github.com/frankosterfeld/qtkeychain).
@@ -20,3 +19,24 @@ Pass -DUSE_CREDENTIAL_STORE=OFF to cmake use disable it. If disabled, QtKeychain
 to encrypt the password with the user's logon credentials. The encrypted data is then persisted via QSettings.
 
 In unsupported environments QtKeychain will report an error. It will not store any data unencrypted unless explicitly requested (setInsecureFallback( true )).
+
+## Worflow
+
+The wallet is used by default by the plugin but can be disabled through a menu
+item.
+
+The plugin will try to retrieve the password from the wallet and keep it in
+sync automatically, but in a few cases it cannot detect a master password change
+ant it will need the user to enter the master password again in order to capture
+and store it.
+
+If the plugin is installed when the master password has already been entered by
+the user, it will prompt the user to store the password in the wallet.
+
+In any case the plugin detects that the password is not synced (like in the case of
+a password reset), it will prompt the user to store the password in the wallet
+and the user will need to enter the password again.
+
+If the password stored in the walled is no longer valid, the new password will
+be stored automatically when the user enters it in the standard credentials
+dialog.

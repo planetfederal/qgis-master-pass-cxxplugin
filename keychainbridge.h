@@ -91,9 +91,11 @@ class KeyChainBridge: public QObject, public QgisPlugin
    //! Save master password in the wallet
    void on_saveMasterPassword_triggered();
 
-   //! Toggle plugin activation ( saved in the settings )
+   //! Toggle plugin functions ( saved in the settings )
    void on_useWallet_changed();
 
+   //! Toggle plugin logging ( saved in the settings )
+   void on_loggingEnabled_changed();
 
   protected:
 
@@ -113,8 +115,8 @@ class KeyChainBridge: public QObject, public QgisPlugin
    //! Plugin is enabled and authmanager too
    bool pluginIsEnabled();
 
-   //! Prompt the user for the master password
-   QString askMasterPassword(QString message);
+   //! Ask the user if he wants to store the master password
+   void askSaveMasterPassword(QString message);
 
    //! Cached master password getter
    QString masterPassword() { return mMasterPassword; }
@@ -154,9 +156,6 @@ class KeyChainBridge: public QObject, public QgisPlugin
    //! Show an info to the user
    void showInfo(QString message);
 
-   //! Capture master password from the credentials dialog instance
-   QString capturePassword();
-
     ////////////////////////////////////////////////////////////////////
     //
     // MANDATORY PLUGIN PROPERTY DECLARATIONS  .....
@@ -194,13 +193,18 @@ class KeyChainBridge: public QObject, public QgisPlugin
     //! Store auth manager instance
     QgsAuthManager* mAuthManager;
 
+    QAction* mUseWalletAction;
+
+    QAction* mLoggingEnabledAction;
+
+    //! Enable logging
+    bool mLoggingEnabled;
+
     //! Master password name in the wallets
     static const QLatin1String sMasterPasswordName;
 
     //! Wallet folder in the wallets
     static const QLatin1String sWalletFolderName;
-
-    QAction* mUseWalletAction;
 };
 
 #endif //KeyChainBridge_H
