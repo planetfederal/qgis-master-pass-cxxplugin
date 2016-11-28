@@ -86,6 +86,7 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
     mMasterPassword( "" ),
     mVerificationError( false ),
     mErrorMessage( "" ),
+    mErrorCode( QKeychain::NoError ),
     mIsDirty( true ),
     mAuthManager( nullptr ),
     mUseWalletAction( nullptr ),
@@ -106,8 +107,6 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
     {
       credentials->installEventFilter( this );
       Q_ASSERT( connect( credentials, SIGNAL( accepted() ), this, SLOT( credentialsDialogAccepted() ) ) );
-      Q_ASSERT( connect( credentials, SIGNAL( credentialsRequested( const QString&, QString *, QString *, const QString&, bool * ) ), this, SLOT( requestCredentials( QString, QString*, QString*, QString, bool* ) ) ) );
-      Q_ASSERT( connect( credentials, SIGNAL( credentialsRequestedMasterPassword( QString*, bool, bool* ) ), this, SLOT( requestCredentialsMasterPassword( QString*, bool, bool* ) ) ) );
     }
 
     // Sync if the authm is open
@@ -155,7 +154,7 @@ void KeyChainBridge::initGui()
 
   mUseWalletAction = new QAction( tr( "Enable the wallet" ), mQGisIface->mainWindow() );
   mUseWalletAction->setCheckable( true );
-  mUseWalletAction->setChecked( mUseWallet );
+  mUseWalletAction->setChecked( useWallet( ) );
   connect( mUseWalletAction, SIGNAL( changed() ), this, SLOT( on_useWallet_changed() ) );
   mQGisIface->addPluginToMenu( tr( "&KeyChain" ), mUseWalletAction );
 
@@ -169,7 +168,8 @@ void KeyChainBridge::initGui()
 //method defined in interface
 void KeyChainBridge::help()
 {
-  //implement me!
+  // FIXME: implement!
+  QMessageBox::information( nullptr, "To be completed", "To be completed" );
 }
 
 
@@ -208,18 +208,6 @@ void KeyChainBridge::masterPasswordVerified( bool verified )
   }
 }
 
-void KeyChainBridge::requestCredentials( const QString &, QString *, QString *, const QString &, bool * )
-{
-  debug( tr( "KeyChainBridge::requestCredentials called" ) );
-}
-
-void KeyChainBridge::requestCredentialsMasterPassword( QString *password, bool stored, bool *ok )
-{
-  Q_UNUSED( password );
-  Q_UNUSED( stored );
-  Q_UNUSED( ok );
-  debug( tr( "KeyChainBridge::requestCredentialsMasterPassword called" ) );
-}
 
 void KeyChainBridge::credentialsDialogAccepted()
 {
@@ -250,24 +238,23 @@ void KeyChainBridge::on_deleteMasterPassword_triggered()
   }
   else
   {
-    setErrorMessage( tr( "There was an error deleting the master password from your wallet: %1" ).arg( errorMessage() ) );
     showError();
   }
 }
 
 void KeyChainBridge::on_useWallet_changed()
 {
-  mUseWallet = mUseWalletAction->isChecked();
+  setUseWallet( mUseWalletAction->isChecked() );
   writeSettings();
-  showInfo( mUseWallet ? tr( "Your wallet will be <b>used from now</b> on to store and retrieve the master password" ) :
+  showInfo( useWallet() ? tr( "Your wallet will be <b>used from now</b> on to store and retrieve the master password" ) :
             tr( "Your wallet will <b>not be used anymore</b> to store and retrieve the master password" ) );
 }
 
 void KeyChainBridge::on_loggingEnabled_changed()
 {
-  mLoggingEnabled = mLoggingEnabledAction->isChecked();
+  setLoggingEnabled( mLoggingEnabledAction->isChecked() );
   writeSettings();
-  showInfo( mLoggingEnabled ? tr( "Logging is now <b>enabled</b>" ) :
+  showInfo( loggingEnabled( ) ? tr( "Logging is now <b>enabled</b>" ) :
             tr( "Logging is now <b>disabled</b>" ) );
 }
 
@@ -283,6 +270,7 @@ bool KeyChainBridge::deleteMasterPassword()
   loop.exec();
   if ( job.error() )
   {
+    setErrorCode( job.error() );
     setErrorMessage( QString( tr( "Delete password failed: %1" ) ).arg( job.errorString() ) );
     setIsDirty( true );
     return false;
@@ -290,7 +278,7 @@ bool KeyChainBridge::deleteMasterPassword()
   else
   {
     setIsDirty( false );
-    setErrorMessage( "" );
+    clearErrors();
     return true;
   }
 }
@@ -319,7 +307,7 @@ bool KeyChainBridge::eventFilter( QObject *obj, QEvent *event )
     {
       // Retrieve master password from wallet
       mMasterPassword = readMasterPassword();
-      if ( ! mMasterPassword.isEmpty() )
+      if ( errorCode() == QKeychain::NoError )
       {
         setIsDirty( false );
         QLineEdit* leMasterPass =  credentials->findChild<QLineEdit*>( "leMasterPass" );
@@ -340,7 +328,8 @@ bool KeyChainBridge::eventFilter( QObject *obj, QEvent *event )
       }
       else   // We've got an error
       {
-        showError();
+        // Process the error
+        processError();
       }
     }
     return QObject::eventFilter( obj, event );
@@ -354,7 +343,7 @@ bool KeyChainBridge::eventFilter( QObject *obj, QEvent *event )
 
 void KeyChainBridge::debug( QString msg )
 {
-  if ( mLoggingEnabled )
+  if ( loggingEnabled( ) )
   {
     QgsMessageLog::logMessage( msg, name() );
   }
@@ -363,20 +352,20 @@ void KeyChainBridge::debug( QString msg )
 void KeyChainBridge::readSettings()
 {
   QSettings settings;
-  mUseWallet = settings.value( QString( "%1/useWallet" ).arg( name() ), true ).toBool();
-  mLoggingEnabled = settings.value( QString( "%1/loggingEnabled" ).arg( name() ), true ).toBool();
+  setUseWallet( settings.value( QString( "%1/useWallet" ).arg( name() ), true ).toBool() );
+  setLoggingEnabled( settings.value( QString( "%1/loggingEnabled" ).arg( name() ), true ).toBool() );
 }
 
 void KeyChainBridge::writeSettings()
 {
   QSettings settings;
-  settings.setValue( QString( "%1/useWallet" ).arg( name() ), mUseWallet );
-  settings.setValue( QString( "%1/loggingEnabled" ).arg( name() ), mLoggingEnabled );
+  settings.setValue( QString( "%1/useWallet" ).arg( name() ), useWallet( ) );
+  settings.setValue( QString( "%1/loggingEnabled" ).arg( name() ), loggingEnabled( ) );
 }
 
 bool KeyChainBridge::pluginIsEnabled()
 {
-  return mUseWallet && ! mAuthManager->isDisabled();
+  return useWallet( ) && ! mAuthManager->isDisabled();
 }
 
 void KeyChainBridge::askSaveMasterPassword( QString message )
@@ -413,12 +402,22 @@ QString KeyChainBridge::readMasterPassword()
   loop.exec();
   if ( job.error() )
   {
+    setErrorCode( job.error() );
     setErrorMessage( QString( tr( "Retrieving password failed: %1" ) ).arg( job.errorString() ) );
   }
   else
   {
     password = job.textData();
-    setErrorMessage( password.isEmpty() ? tr( "Empty password retrieved from wallet" ) : "" );
+    // Password is there but it is empty, treat it like if it were not found
+    if ( password.isEmpty() )
+    {
+      setErrorCode( QKeychain::EntryNotFound );
+      setErrorMessage( tr( "Empty password retrieved from wallet" ) );
+    }
+    else
+    {
+      clearErrors();
+    }
   }
   return password;
 }
@@ -438,6 +437,7 @@ bool KeyChainBridge::storeMasterPassword( QString password )
   loop.exec();
   if ( job.error() )
   {
+    setErrorCode( job.error() );
     setErrorMessage( QString( tr( "Storing password failed: %1" ) ).arg( job.errorString() ) );
     setIsDirty( true );
     return false;
@@ -445,9 +445,15 @@ bool KeyChainBridge::storeMasterPassword( QString password )
   else
   {
     setIsDirty( false );
-    setErrorMessage( "" );
+    clearErrors();
     return true;
-  }
+    }
+}
+
+void KeyChainBridge::clearErrors()
+{
+  setErrorCode( QKeychain::NoError );
+  setErrorMessage( "" );
 }
 
 
@@ -465,18 +471,19 @@ void KeyChainBridge::saveMasterPassword()
   }
   if ( ! masterPassword().isEmpty() )
   {
-    if ( storeMasterPassword( masterPassword() ) )
+    storeMasterPassword( masterPassword() );
+    if ( errorCode() != QKeychain::NoError )
     {
       showInfo( tr( "Master password has been successfully stored in your wallet!" ) );
     }
     else
     {
-      showError();
+      processError();
     }
   }
   else
   {
-    setErrorMessage( tr( "Could not retrieve the master password from the wallet" ) );
+    setErrorMessage( tr( "Master password is empty: nothing to store" ) );
     showError( );
   }
 }
@@ -486,6 +493,24 @@ void KeyChainBridge::showError()
   QString message( mErrorMessage.isEmpty() ? QString( tr( "Generic %1 plugin error" ) ).arg( name() ) : mErrorMessage );
   mQGisIface->messageBar()->pushCritical( QString( tr( "%1 plugin error" ) ).arg( name() ), message );
   debug( message );
+}
+
+
+// If the error is permanent or the user denied access to the wallet
+// we also want to disable the wallet system to prevent annoying
+// notification on each subsequent access try.
+void KeyChainBridge::processError()
+{
+  if ( errorCode() == QKeychain::AccessDenied ||
+       errorCode() == QKeychain::AccessDeniedByUser ||
+       errorCode() == QKeychain::NoBackendAvailable ||
+       errorCode() == QKeychain::NotImplemented )
+  {
+    setUseWallet( false );
+    mUseWalletAction->setChecked( false );
+    setErrorMessage( QString( tr("There was an error and the wallet system has been disabled, you can re-enable it at any time through the menus. %1").arg( errorMessage( ) ) ) );
+  }
+  showError();
 }
 
 void KeyChainBridge::showInfo( QString message )

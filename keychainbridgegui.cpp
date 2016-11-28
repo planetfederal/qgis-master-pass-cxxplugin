@@ -27,14 +27,20 @@ KeyChainBridgeGui::KeyChainBridgeGui( QWidget* parent, Qt::WindowFlags fl )
   // pieces of text. One-liners can be added in the .ui file
 
   // Note: Format does not relate to translation.
-  QString format( "<html><body><h3>%1</h3><p>%2</p>"
+  QString format( "<html><body>"
+                  "<h3>%1</h3>"
+                  "<p>%2</p>"
+                  "<p>%3</p>"
                   "</body></html>" );
 
 
   // Note: Translatable strings below
   QString text = format
                  .arg( tr( "KeyChain Plugin" ) )
-                 .arg( tr( "This plugin enables storage and synchronization of the master password with an external wallet." ));
+                 .arg( tr( "This plugin enables storage and synchronization of the master password with an external wallet." ) )
+                 .arg( tr( "The plugin does its best to keep the master password in sync with the one stored in the wallet, but"
+                           "in a few cases (like password reset) it will not be able to capture the password from the user input and "
+                           "it will be necessary to enter the master password twice."));
 
   textBrowser->setHtml( text );
 }

@@ -26,9 +26,9 @@ The wallet is used by default by the plugin but can be disabled through a menu
 item.
 
 The plugin will try to retrieve the password from the wallet and keep it in
-sync automatically, but in a few cases it cannot detect a master password change
-and it will need the user to enter the master password again in order to capture
-and store it.
+sync automatically, but in a few cases it will not be able to capture the new
+master password and it will need the user to enter it again in order to
+capture and store it.
 
 If the plugin is enabled when the master password has already been entered by
 the user, it will prompt the user to store the password in the wallet.

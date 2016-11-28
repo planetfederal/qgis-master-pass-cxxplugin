@@ -26,12 +26,16 @@
 //QGIS includes
 #include "../qgisplugin.h"
 
+// QtKeyChain library
+#include "qtkeychain/keychain.h"
+
 //forward declarations
 class QAction;
 class QToolBar;
 
 class QgisInterface;
 class QgsAuthManager;
+
 
 /**
 * \class Plugin
@@ -59,12 +63,16 @@ class KeyChainBridge: public QObject, public QgisPlugin
     virtual ~KeyChainBridge();
 
   public slots:
+
     //! init the gui
     virtual void initGui();
+
     //! Show the dialog box
     void about();
+
     //! unload the plugin
     void unload();
+
     //! show the help document
     void help();
 
@@ -75,12 +83,6 @@ class KeyChainBridge: public QObject, public QgisPlugin
     * @param verified The state of password's verification
     */
    void masterPasswordVerified( bool verified );
-
-   //! Connected to the authmanager signal
-   void requestCredentials( const QString&, QString *, QString *, const QString&, bool * );
-
-   //! Connected to the authmanager signal
-   void requestCredentialsMasterPassword( QString *password, bool stored, bool *ok );
 
    //! Capture the master password from the credentials dialog
    void credentialsDialogAccepted();
@@ -141,6 +143,27 @@ class KeyChainBridge: public QObject, public QgisPlugin
    //! Error message getter
    QString errorMessage() { return mErrorMessage; }
 
+   //! Clear error code and message
+   void clearErrors();
+
+   //! Use wallet  getter
+   bool useWallet() { return mUseWallet; }
+
+   //! Use wallet setter
+   void setUseWallet( bool useWallet ) { mUseWallet = useWallet; }
+
+   //! Logging getter
+   bool loggingEnabled() { return mLoggingEnabled; }
+
+   //! Logging setter
+   void setLoggingEnabled( bool loggingEnabled ) { mLoggingEnabled = loggingEnabled; }
+
+   //! Error code setter
+   void setErrorCode(QKeychain::Error errorCode) { mErrorCode = errorCode; }
+
+   //! Error code getter
+   QKeychain::Error errorCode() { return mErrorCode; }
+
    //! Dirty flag setter
    void setIsDirty( bool dirty ) { mIsDirty = dirty; }
 
@@ -153,6 +176,10 @@ class KeyChainBridge: public QObject, public QgisPlugin
    //! Show an error to the user
    void showError();
 
+   //! Process the error: show it and/or disable the wallet system in case of
+   //! access denied or no backend
+   void processError();
+
    //! Show an info to the user
    void showInfo(QString message);
 
@@ -163,8 +190,10 @@ class KeyChainBridge: public QObject, public QgisPlugin
     ////////////////////////////////////////////////////////////////////
 
     int mPluginType;
+
     //! Pointer to the QGIS interface object
     QgisInterface *mQGisIface;
+
     //!pointer to the qaction for this plugin
     QAction * mQActionPointer;
 
@@ -185,6 +214,9 @@ class KeyChainBridge: public QObject, public QgisPlugin
 
     //! Store last error message
     QString mErrorMessage;
+
+    //! Store last error code (enum)
+    QKeychain::Error mErrorCode;
 
     //! Master password in memory is not in sync with the wallet
     //! This could be for several reasons: error in reading, empty password, wrong password etc.
