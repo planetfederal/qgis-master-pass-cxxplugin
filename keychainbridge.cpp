@@ -67,6 +67,16 @@ static const QString sPluginIcon = ":/keychainbridge/keychainbridge.png";
 const QLatin1String KeyChainBridge::sMasterPasswordName( "QGIS-Master-Password" );
 const QLatin1String KeyChainBridge::sWalletFolderName( "QGIS" );
 
+#if defined(Q_OS_MAC)
+const QString KeyChainBridge::sWalletDisplayName( "KeyChain" );
+#elif defined(Q_OS_WIN)
+const QString KeyChainBridge::sWalletDisplayName( "Password Manager" );
+#elif defined(Q_OS_LINUX)
+const QString KeyChainBridge::sWalletDisplayName( "Wallet" );
+#else
+const QString KeyChainBridge::sWalletDisplayName( "Password Manager" );
+#endif
+
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -137,32 +147,32 @@ void KeyChainBridge::initGui()
   mQActionPointer = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "About KeyChain plugin" ), this );
   mQActionPointer->setObjectName( "mQActionPointer" );
   // Set the what's this text
-  mQActionPointer->setWhatsThis( tr( "Store the master password in your wallet" ) );
+  mQActionPointer->setWhatsThis( tr( "Store the master password in your %1" ).arg( sWalletDisplayName ) );
   // Connect the action to the run
   connect( mQActionPointer, SIGNAL( triggered() ), this, SLOT( about() ) );
   // Add the icon to the toolbar
   // mQGisIface->addToolBarIcon( mQActionPointer );
-  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), mQActionPointer );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mQActionPointer );
 
   QAction* action;
-  action = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your wallet" ), mQGisIface->mainWindow() );
+  action = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   connect( action, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered() ) );
-  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
-  action = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Clear the master password from your wallet" ), mQGisIface->mainWindow() );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), action );
+  action = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Clear the master password from your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   connect( action, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered() ) );
-  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), action );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), action );
 
-  mUseWalletAction = new QAction( tr( "Enable the wallet" ), mQGisIface->mainWindow() );
+  mUseWalletAction = new QAction( tr( "Enable the integration with the %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   mUseWalletAction->setCheckable( true );
   mUseWalletAction->setChecked( useWallet( ) );
   connect( mUseWalletAction, SIGNAL( changed() ), this, SLOT( on_useWallet_changed() ) );
-  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), mUseWalletAction );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mUseWalletAction );
 
   mLoggingEnabledAction = new QAction( tr( "Enable logging" ), mQGisIface->mainWindow() );
   mLoggingEnabledAction->setCheckable( true );
   mLoggingEnabledAction->setChecked( mLoggingEnabled );
   connect( mLoggingEnabledAction, SIGNAL( changed() ), this, SLOT( on_loggingEnabled_changed() ) );
-  mQGisIface->addPluginToMenu( tr( "&KeyChain" ), mLoggingEnabledAction );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mLoggingEnabledAction );
 
 }
 //method defined in interface
@@ -190,7 +200,7 @@ void KeyChainBridge::masterPasswordVerified( bool verified )
     {
       setIsDirty( true );
       //showInfo( tr("Cached master password is not valid anymore"));
-      askSaveMasterPassword( tr( "Master password stored in the wallet is not valid anymore, do you want to update it now?" ) );
+      askSaveMasterPassword( tr( "Master password stored in the %1 is not valid anymore, do you want to update it now?" ).arg( sWalletDisplayName ) );
     }
     // Check if we have a valid password and we need to store it in the wallet
     if ( verified && isDirty() && passwordIsSame( masterPassword() ) )
@@ -198,7 +208,7 @@ void KeyChainBridge::masterPasswordVerified( bool verified )
       if ( storeMasterPassword( masterPassword() ) )
       {
         setIsDirty( false ); // Password is synced!
-        showInfo( tr( "Master password has been successfully stored in your wallet" ) );
+        showInfo( tr( "Master password has been successfully stored in your %1" ).arg( sWalletDisplayName ) );
       }
       else
       {
@@ -234,7 +244,7 @@ void KeyChainBridge::on_deleteMasterPassword_triggered()
   setIsDirty( true );
   if ( ok )
   {
-    showInfo( tr( "The master password has been successfully removed from your wallet" ) );
+    showInfo( tr( "The master password has been successfully removed from your %1" ).arg( sWalletDisplayName ) );
   }
   else
   {
@@ -246,8 +256,8 @@ void KeyChainBridge::on_useWallet_changed()
 {
   setUseWallet( mUseWalletAction->isChecked() );
   writeSettings();
-  showInfo( useWallet() ? tr( "Your wallet will be <b>used from now</b> on to store and retrieve the master password" ) :
-            tr( "Your wallet will <b>not be used anymore</b> to store and retrieve the master password" ) );
+  showInfo( useWallet() ? tr( "Your %1 will be <b>used from now</b> on to store and retrieve the master password" ).arg( sWalletDisplayName ) :
+            tr( "Your %1 will <b>not be used anymore</b> to store and retrieve the master password" ).arg( sWalletDisplayName ) );
 }
 
 void KeyChainBridge::on_loggingEnabled_changed()
@@ -316,11 +326,11 @@ bool KeyChainBridge::eventFilter( QObject *obj, QEvent *event )
         {
           leMasterPass->setText( mMasterPassword );
           QTimer::singleShot( 0, credentials, SLOT( accept() ) );
-          showInfo( tr( "Master password has been successfully inserted from wallet!" ) );
+          showInfo( tr( "Master password has been successfully inserted from %1!" ).arg( sWalletDisplayName ) );
         }
         else
         {
-          setErrorMessage( "It seems like the password stored in the wallet is no longer valid" );
+          setErrorMessage( tr("It seems like the password stored in the %1 is no longer valid" ).arg( sWalletDisplayName ) );
           showError();
           setIsDirty( true );
           mMasterPassword = "";
@@ -353,7 +363,7 @@ void KeyChainBridge::readSettings()
 {
   QSettings settings;
   setUseWallet( settings.value( QString( "%1/useWallet" ).arg( name() ), true ).toBool() );
-  setLoggingEnabled( settings.value( QString( "%1/loggingEnabled" ).arg( name() ), true ).toBool() );
+  setLoggingEnabled( settings.value( QString( "%1/loggingEnabled" ).arg( name() ), false ).toBool() );
 }
 
 void KeyChainBridge::writeSettings()
@@ -412,7 +422,7 @@ QString KeyChainBridge::readMasterPassword()
     if ( password.isEmpty() )
     {
       setErrorCode( QKeychain::EntryNotFound );
-      setErrorMessage( tr( "Empty password retrieved from wallet" ) );
+      setErrorMessage( tr( "Empty password retrieved from the %1" ).arg( sWalletDisplayName ) );
     }
     else
     {
@@ -472,9 +482,9 @@ void KeyChainBridge::saveMasterPassword()
   if ( ! masterPassword().isEmpty() )
   {
     storeMasterPassword( masterPassword() );
-    if ( errorCode() != QKeychain::NoError )
+    if ( errorCode() == QKeychain::NoError )
     {
-      showInfo( tr( "Master password has been successfully stored in your wallet!" ) );
+      showInfo( tr( "Master password has been successfully stored in your %1!" ).arg( sWalletDisplayName ) );
     }
     else
     {
@@ -508,7 +518,7 @@ void KeyChainBridge::processError()
   {
     setUseWallet( false );
     mUseWalletAction->setChecked( false );
-    setErrorMessage( QString( tr("There was an error and the wallet system has been disabled, you can re-enable it at any time through the menus. %1").arg( errorMessage( ) ) ) );
+    setErrorMessage( QString( tr("There was an error and the %1 system has been disabled, you can re-enable it at any time through the menus. %2").arg( sWalletDisplayName ).arg( errorMessage( ) ) ) );
   }
   showError();
 }

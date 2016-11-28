@@ -232,6 +232,9 @@ class KeyChainBridge: public QObject, public QgisPlugin
     //! Enable logging
     bool mLoggingEnabled;
 
+    //! The display name of the wallet (platform dependent)
+    static const QString sWalletDisplayName;
+
     //! Master password name in the wallets
     static const QLatin1String sMasterPasswordName;
 
