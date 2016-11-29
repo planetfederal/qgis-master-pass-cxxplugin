@@ -195,7 +195,7 @@ class KeyChainBridge: public QObject, public QgisPlugin
     QgisInterface *mQGisIface;
 
     //!pointer to the qaction for this plugin
-    QAction * mQActionPointer;
+    QAction * mAboutAction;
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -228,6 +228,10 @@ class KeyChainBridge: public QObject, public QgisPlugin
     QAction* mUseWalletAction;
 
     QAction* mLoggingEnabledAction;
+
+    QAction* mSaveMasterPasswordAction;
+
+    QAction* mClearMasterPasswordAction;
 
     //! Enable logging
     bool mLoggingEnabled;

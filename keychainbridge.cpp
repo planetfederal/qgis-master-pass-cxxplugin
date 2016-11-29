@@ -101,6 +101,8 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
     mAuthManager( nullptr ),
     mUseWalletAction( nullptr ),
     mLoggingEnabledAction( nullptr ),
+    mSaveMasterPasswordAction( nullptr ),
+    mClearMasterPasswordAction( nullptr ),
     mLoggingEnabled( false )
 {
   // Read settings
@@ -144,23 +146,20 @@ void KeyChainBridge::initGui()
 {
 
   // Create the action for tool
-  mQActionPointer = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "About KeyChain plugin" ), this );
-  mQActionPointer->setObjectName( "mQActionPointer" );
+  mAboutAction = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "About KeyChain plugin" ), this );
+  mAboutAction->setObjectName( "KeyChainQActionPointer" );
   // Set the what's this text
-  mQActionPointer->setWhatsThis( tr( "Store the master password in your %1" ).arg( sWalletDisplayName ) );
+  mAboutAction->setWhatsThis( tr( "Store the master password in your %1" ).arg( sWalletDisplayName ) );
   // Connect the action to the run
-  connect( mQActionPointer, SIGNAL( triggered() ), this, SLOT( about() ) );
-  // Add the icon to the toolbar
-  // mQGisIface->addToolBarIcon( mQActionPointer );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mQActionPointer );
+  connect( mAboutAction, SIGNAL( triggered() ), this, SLOT( about() ) );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mAboutAction );
 
-  QAction* action;
-  action = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
-  connect( action, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), action );
-  action = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Clear the master password from your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
-  connect( action, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), action );
+  mSaveMasterPasswordAction = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
+  connect( mSaveMasterPasswordAction, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered() ) );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mSaveMasterPasswordAction );
+  mClearMasterPasswordAction = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Clear the master password from your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
+  connect( mClearMasterPasswordAction, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered() ) );
+  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mClearMasterPasswordAction );
 
   mUseWalletAction = new QAction( tr( "Enable the integration with the %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   mUseWalletAction->setCheckable( true );
@@ -545,11 +544,21 @@ void KeyChainBridge::about()
 void KeyChainBridge::unload()
 {
   // remove the GUI
-  mQGisIface->removePluginMenu( "&KeyChain", mQActionPointer );
-  mQGisIface->removeToolBarIcon( mQActionPointer );
+  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mAboutAction );
+  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mUseWalletAction );
+  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mLoggingEnabledAction );
+  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mSaveMasterPasswordAction );
+  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mClearMasterPasswordAction );
+  // Disconnect all signals
+  disconnect(this, 0, 0, 0);
+  // Remove event filter
+  QgsCredentialDialog* credentials = dynamic_cast<QgsCredentialDialog*>( QgsCredentials::instance() );
+  credentials->removeEventFilter( this );
   delete mUseWalletAction;
   delete mLoggingEnabledAction;
-  delete mQActionPointer;
+  delete mSaveMasterPasswordAction;
+  delete mClearMasterPasswordAction;
+  delete mAboutAction;
 }
 
 
