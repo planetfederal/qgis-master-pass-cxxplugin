@@ -5,6 +5,12 @@ an external wallet.
 
 It is based on the cross-platform [QtKeychain library](https://github.com/frankosterfeld/qtkeychain).
 
+This library is also available on Debian/Ubuntu:
+```
+libqtkeychain0 - Developement files for qtkeychain
+qtkeychain-dev - Qt API to store passwords and other secret data securely
+```
+
 From the library README:
 
 QtKeychain is a Qt API to store passwords and other secret data securely. How the data is stored depends on the platform:
