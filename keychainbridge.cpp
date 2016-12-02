@@ -115,11 +115,9 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
     connect( mAuthManager, SIGNAL( masterPasswordVerified( bool ) ), this, SLOT( masterPasswordVerified( bool ) ) ) ;
     QgsCredentialDialog* credentials = dynamic_cast<QgsCredentialDialog*>( QgsCredentials::instance() );
 
-    if ( credentials )
-    {
-      credentials->installEventFilter( this );
-      Q_ASSERT( connect( credentials, SIGNAL( accepted() ), this, SLOT( credentialsDialogAccepted() ) ) );
-    }
+    Q_ASSERT( credentials );
+    credentials->installEventFilter( this );
+    connect( credentials, SIGNAL( accepted() ), this, SLOT( credentialsDialogAccepted() ) );
 
     // Sync if the authm is open
     if ( mAuthManager->masterPasswordIsSet() )
@@ -225,8 +223,13 @@ void KeyChainBridge::credentialsDialogAccepted()
   QString password = leMasterPass->text();
   if ( ! password.isEmpty() )
   {
-    setIsDirty( mMasterPassword != password );
+    setIsDirty( mMasterPassword != password );    
     mMasterPassword = password;
+    debug( tr("Password has been captured successfully") );
+  }
+  else
+  {
+    debug( tr("Could not capture the password") );
   }
 }
 
@@ -307,6 +310,7 @@ bool KeyChainBridge::eventFilter( QObject *obj, QEvent *event )
   }
 
   QgsCredentialDialog* credentials = qobject_cast<QgsCredentialDialog*>( obj );
+  Q_ASSERT( credentials );
 
   // Dialog is about to be shown: QGIS wants a master password
   if ( credentials && event->type() == QEvent::Show )
