@@ -59,7 +59,7 @@
 
 
 static const QString sName = QObject::tr( "KeyChain" );
-static const QString sDescription = QObject::tr( "Keychain authentication bridge" );
+static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store your master password in your Wallet/KeyChain/Password Manager" );
 static const QString sCategory = QObject::tr( "authentication" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
