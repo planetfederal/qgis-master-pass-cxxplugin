@@ -46,6 +46,7 @@
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QTimer>
+#include <QStackedWidget>
 
 // QtKeyChain library
 #include "qtkeychain/keychain.h"
@@ -311,9 +312,12 @@ bool KeyChainBridge::eventFilter( QObject *obj, QEvent *event )
 
   QgsCredentialDialog* credentials = qobject_cast<QgsCredentialDialog*>( obj );
   Q_ASSERT( credentials );
+  QStackedWidget* stackedWidget =  credentials->findChild<QStackedWidget*>( "stackedWidget" );
+  Q_ASSERT( stackedWidget );
 
   // Dialog is about to be shown: QGIS wants a master password
-  if ( credentials && event->type() == QEvent::Show )
+  if ( stackedWidget->currentIndex() == 1 &&
+       event->type() == QEvent::Show)
   {
     // If there was an error, we do not want to enter this pwd again, and again ...
     if ( ! mVerificationError )
