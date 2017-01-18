@@ -24,7 +24,7 @@
 #include <QObject>
 
 //QGIS includes
-#include "../qgisplugin.h"
+#include "qgisplugin.h"
 
 // QtKeyChain library
 #include "qtkeychain/keychain.h"

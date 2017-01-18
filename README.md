@@ -26,7 +26,31 @@ to encrypt the password with the user's logon credentials. The encrypted data is
 
 In unsupported environments QtKeychain will report an error. It will not store any data unencrypted unless explicitly requested (setInsecureFallback( true )).
 
-## Worflow
+## Building
+
+Requirements:
+
+* CMake >= 2.8.12
+* QtKeychain >= 0.7.0
+* QGIS >= 2.14 source code clone/checkout or install (see below)
+
+### Inside of QGIS source tree
+
+The subdirectory ``keychainbridge`` contains the source code for the plugin, and is ready to place inside a QGIS source tree; then, you will need to add the following to ``QGIS/src/plugins/CMakeLists.txt``:
+
+```
+ADD_SUBDIRECTORY(keychainbridge)
+```
+
+After which, you compile QGIS normally.
+
+### Against existing QGIS install
+
+If you use the ``CMakeLists.txt`` at the root of this directory, you will attempt to build the plugin against an existing install of QGIS, which needs its C++ development headers installed as well.
+
+Upon ``make install`` the plugin will be installed into the QGIS's Plugin Path, i.e. ``QgsApplication::pluginPath()``.
+
+## Plugin Workflow
 
 The wallet is used by default by the plugin but can be disabled through a menu
 item.

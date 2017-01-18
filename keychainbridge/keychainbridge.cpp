@@ -52,7 +52,7 @@
 #include "qtkeychain/keychain.h"
 
 // QGIS classes
-#include "auth/qgsauthmanager.h"
+#include "qgsauthmanager.h"
 #include "qgscredentials.h"
 #include "qgscredentialdialog.h"
 #include "qgsmessagelog.h"
