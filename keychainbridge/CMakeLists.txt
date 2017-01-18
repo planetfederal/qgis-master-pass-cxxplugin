@@ -34,7 +34,9 @@ QT4_ADD_RESOURCES(keychainbridge_RCC_SRCS ${keychainbridge_RCCS})
 ADD_LIBRARY (keychainbridgeplugin MODULE ${keychainbridge_SRCS} ${keychainbridge_MOC_SRCS} ${keychainbridge_RCC_SRCS} ${keychainbridge_UIS_H})
 
 # for unit testing
-ADD_LIBRARY (keychainbridgeplugin_static STATIC ${keychainbridge_SRCS} ${keychainbridge_MOC_SRCS} ${keychainbridge_RCC_SRCS} ${keychainbridge_UIS_H})
+IF(ENABLE_TESTS)
+  ADD_LIBRARY (keychainbridgeplugin_static STATIC ${keychainbridge_SRCS} ${keychainbridge_MOC_SRCS} ${keychainbridge_RCC_SRCS} ${keychainbridge_UIS_H})
+ENDIF(ENABLE_TESTS)
 
 # shared includes
 INCLUDE_DIRECTORIES (
@@ -88,9 +90,12 @@ ENDIF(WITH_DESKTOP)
 TARGET_LINK_LIBRARIES(keychainbridgeplugin
   ${PLUGIN_TARGET_LIBS}
 )
-TARGET_LINK_LIBRARIES(keychainbridgeplugin_static
-  ${PLUGIN_TARGET_LIBS}
-)
+
+IF(ENABLE_TESTS)
+  TARGET_LINK_LIBRARIES(keychainbridgeplugin_static
+    ${PLUGIN_TARGET_LIBS}
+  )
+ENDIF(ENABLE_TESTS)
 
 ########################################################
 # Install
