@@ -93,7 +93,7 @@ ELSE(WIN32)
         ${QGIS_BUILD_PATH}/PlugIns/qgis
         ${QGIS_PREFIX_PATH}/lib/qgis/plugins/
         /usr/lib64/qgis/plugins
-        /usr/lib/qgis
+        /usr/lib/qgis/plugins
         /usr/local/lib/qgis/plugins
         ${QGIS_MAC_PATH}/PlugIns/qgis
         "$ENV{LIB_DIR}/lib/qgis/plugins"
@@ -146,6 +146,7 @@ ELSE(WIN32)
         ${QGIS_UI_INCLUDE_DIR}
       )
     ENDIF (APPLE)
+    
     FIND_LIBRARY(QGIS_CORE_LIBRARY
       NAMES qgis_core
       PATHS

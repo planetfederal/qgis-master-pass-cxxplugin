@@ -3,7 +3,7 @@
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
-FIND_PACKAGE(QTKEYCHAIN REQUIRED)
+FIND_PACKAGE(QtKeychain REQUIRED)
 
 ########################################################
 # Files
