@@ -108,6 +108,10 @@ endif()
 
 find_package(QGIS REQUIRED)
 
+if(NOT QGIS_PLUGIN_DIR)
+  message(WARNING "Couldn't find QGIS_PLUGIN_DIR; install may fail")
+endif()
+
 if(WIN32)
   set(DLLIMPORT "__declspec(dllimport)")
   set(DLLEXPORT "__declspec(dllexport)")
