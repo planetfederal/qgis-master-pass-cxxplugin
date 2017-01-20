@@ -53,12 +53,12 @@ IF(WITH_DESKTOP)
   # include ui built headers
   INCLUDE_DIRECTORIES(
      ${CMAKE_BINARY_DIR}/src/ui
-     ../../core
-     ../../core/auth
-     ../../core/geometry
-     ../../core/raster
-     ../../gui
-     ..
+     ../../../core
+     ../../../core/auth
+     ../../../core/geometry
+     ../../../core/raster
+     ../../../gui
+     ../../
   )
 
   SET(PLUGIN_TARGET_LIBS

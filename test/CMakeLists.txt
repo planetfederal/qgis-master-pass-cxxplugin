@@ -8,7 +8,13 @@ include_directories(SYSTEM
   ${QT_INCLUDE_DIR}
   ${QGIS_INCLUDE_DIR}
   ${QCA_INCLUDE_DIR}
-  ../src
+  ${CMAKE_BINARY_DIR}/src/ui
+  ../../../core
+  ../../../core/auth
+  ../../../core/geometry
+  ../../../core/raster
+  ../../../gui
+  ../../
 )
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
