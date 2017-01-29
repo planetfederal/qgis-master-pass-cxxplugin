@@ -104,19 +104,28 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
     mLoggingEnabledAction( nullptr ),
     mSaveMasterPasswordAction( nullptr ),
     mClearMasterPasswordAction( nullptr ),
-    mLoggingEnabled( false )
+    mLoggingEnabled( false ),
+    mFailedInit( false )
 {
   // Read settings
   readSettings();
 
   // Connect to Auth Manager
   mAuthManager = QgsAuthManager::instance();
-  if ( ! mAuthManager->isDisabled() )
+  if ( mAuthManager && ! mAuthManager->isDisabled() )
   {
     connect( mAuthManager, SIGNAL( masterPasswordVerified( bool ) ), this, SLOT( masterPasswordVerified( bool ) ) ) ;
+
     QgsCredentialDialog* credentials = dynamic_cast<QgsCredentialDialog*>( QgsCredentials::instance() );
 
-    Q_ASSERT( credentials );
+    if ( !credentials )
+    {
+      mFailedInit = true;
+      mQGisIface->messageBar()->pushWarning( tr( "Master Password &lt;--&gt; %1" ).arg( sWalletDisplayName ),
+                                             tr( "plugin could not be loaded" ) );
+      qDebug( "Credentials dialog could not be cast from QgsCredentials instance" );
+      return;
+    }
     credentials->installEventFilter( this );
     connect( credentials, SIGNAL( accepted() ), this, SLOT( credentialsDialogAccepted() ) );
 
@@ -128,9 +137,11 @@ KeyChainBridge::KeyChainBridge( QgisInterface * theQgisInterface ):
   }
   else
   {
-    debug( tr( "Auth manager is disabled." ) );
-  }
-}
+    mFailedInit = true;
+    qDebug( "Authentication manager is disabled" );
+    debug( tr( "Authentication manager is disabled." ) );
+    return;
+  }}
 
 KeyChainBridge::~KeyChainBridge()
 {
@@ -551,6 +562,10 @@ void KeyChainBridge::about()
 // Unload the plugin by cleaning up the GUI
 void KeyChainBridge::unload()
 {
+  if ( mFailedInit )
+  {
+    return;
+  }
   // remove the GUI
   mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mAboutAction );
   mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mUseWalletAction );

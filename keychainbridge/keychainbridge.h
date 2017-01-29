@@ -58,20 +58,20 @@ class KeyChainBridge: public QObject, public QgisPlugin
     * QGIS when it attempts to instantiate the plugin.
     * @param theInterface Pointer to the QgisInterface object.
      */
-    KeyChainBridge( QgisInterface * theInterface );
+    explicit KeyChainBridge( QgisInterface * theInterface );
     //! Destructor
-    virtual ~KeyChainBridge();
+    ~KeyChainBridge();
 
   public slots:
 
     //! init the gui
-    virtual void initGui();
+    void initGui() override;
 
     //! Show the dialog box
     void about();
 
     //! unload the plugin
-    void unload();
+    void unload() override;
 
     //! show the help document
     void help();
@@ -101,7 +101,7 @@ class KeyChainBridge: public QObject, public QgisPlugin
 
   protected:
 
-   bool eventFilter(QObject *obj, QEvent *event);
+   bool eventFilter(QObject *obj, QEvent *event) override;
 
   private:
 
@@ -244,6 +244,9 @@ class KeyChainBridge: public QObject, public QgisPlugin
 
     //! Wallet folder in the wallets
     static const QLatin1String sWalletFolderName;
+
+    //! Whether the plugin failed to initialize
+    bool mFailedInit;
 };
 
 #endif //KeyChainBridge_H
