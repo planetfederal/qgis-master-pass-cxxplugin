@@ -91,34 +91,34 @@ ELSE(WIN32)
       NAMES libspatialqueryplugin.so
       PATHS
         ${QGIS_BUILD_PATH}/PlugIns/qgis
+        ${QGIS_MAC_PATH}/PlugIns/qgis
         ${QGIS_PREFIX_PATH}/lib/qgis/plugins/
         /usr/lib64/qgis/plugins
         /usr/lib/qgis/plugins
         /usr/local/lib/qgis/plugins
-        ${QGIS_MAC_PATH}/PlugIns/qgis
         "$ENV{LIB_DIR}/lib/qgis/plugins"
         "$ENV{LIB_DIR}/lib/qgis"
     )
     FIND_PATH(QGIS_INCLUDE_DIR
       NAMES qgis.h
       PATHS
+        ${QGIS_BUILD_PATH}/output/lib/qgis_core.framework/Headers
+        ${QGIS_MAC_PATH}/Frameworks/qgis_core.framework/Headers
         {QGIS_PREFIX_PATH}/include/qgis
         /usr/include/qgis
         /usr/local/include/qgis
-        ${QGIS_BUILD_PATH}/output/lib/qgis_core.framework/Headers
         /Library/Frameworks/qgis_core.framework/Headers
-        ${QGIS_MAC_PATH}/Frameworks/qgis_core.framework/Headers
         "$ENV{LIB_DIR}/include/qgis"
     )
     FIND_PATH(QGIS_UI_INCLUDE_DIR
       NAMES ui_qgscredentialdialog.h
       PATHS
         ${QGIS_BUILD_PATH}/src/ui
+        ${QGIS_MAC_PATH}/Frameworks/qgis_gui.framework/Headers
         {QGIS_PREFIX_PATH}/include/qgis
         /usr/include/qgis
         /usr/local/include/qgis
         /Library/Frameworks/qgis_gui.framework/Headers
-        ${QGIS_MAC_PATH}/Frameworks/qgis_gui.framework/Headers
         "$ENV{LIB_DIR}/include/qgis"
     )
     # also get other frameworks' headers folders on OS X
@@ -127,16 +127,16 @@ ELSE(WIN32)
         NAMES qgisgui.h
         PATHS
           ${QGIS_BUILD_PATH}/output/lib
-          /Library/Frameworks
           ${QGIS_MAC_PATH}/Frameworks
+          /Library/Frameworks
           PATH_SUFFIXES qgis_gui.framework/Headers
       )
       FIND_PATH(QGIS_ANALYSIS_INCLUDE_DIR
         NAMES qgsinterpolator.h
         PATHS
           ${QGIS_BUILD_PATH}/output/lib
-          /Library/Frameworks
           ${QGIS_MAC_PATH}/Frameworks
+          /Library/Frameworks
           PATH_SUFFIXES qgis_analysis.framework/Headers
       )
       SET(QGIS_INCLUDE_DIR
@@ -151,13 +151,13 @@ ELSE(WIN32)
       NAMES qgis_core
       PATHS
         ${QGIS_BUILD_PATH}/output/lib
+        ${QGIS_MAC_PATH}/Frameworks
+        ${QGIS_MAC_PATH}/lib
         ${QGIS_PREFIX_PATH}/lib/
         /usr/lib64
         /usr/lib
         /usr/local/lib
         /Library/Frameworks
-        ${QGIS_MAC_PATH}/Frameworks
-        ${QGIS_MAC_PATH}/lib
         "$ENV{LIB_DIR}/lib/"
         PATH_SUFFIXES qgis-dev
     )
@@ -165,13 +165,13 @@ ELSE(WIN32)
       NAMES qgis_gui
       PATHS
         ${QGIS_BUILD_PATH}/output/lib
+        ${QGIS_MAC_PATH}/Frameworks
+        ${QGIS_MAC_PATH}/lib
         ${QGIS_PREFIX_PATH}/lib/
         /usr/lib64
         /usr/lib
         /usr/local/lib
         /Library/Frameworks
-        ${QGIS_MAC_PATH}/Frameworks
-        ${QGIS_MAC_PATH}/lib
         "$ENV{LIB_DIR}/lib/"
         PATH_SUFFIXES qgis-dev
     )
@@ -179,13 +179,13 @@ ELSE(WIN32)
       NAMES qgis_analysis
       PATHS
         ${QGIS_BUILD_PATH}/output/lib
+        ${QGIS_MAC_PATH}/Frameworks
+        ${QGIS_MAC_PATH}/lib
         ${QGIS_PREFIX_PATH}/lib/
         /usr/lib64
         /usr/lib
         /usr/local/lib
         /Library/Frameworks
-        ${QGIS_MAC_PATH}/Frameworks
-        ${QGIS_MAC_PATH}/lib
         "$ENV{LIB_DIR}/lib/"
         PATH_SUFFIXES qgis-dev
     )
