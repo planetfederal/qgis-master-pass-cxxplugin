@@ -59,6 +59,10 @@
 #include "qgsmessagebar.h"
 
 
+
+// Timeout for the messagebar info messages, in seconds
+const int MESSAGE_BAR_INFO_TIMEOUT = 10;
+
 static const QString sName = QObject::tr( "KeyChain" );
 static const QString sCategory = QObject::tr( "authentication" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
@@ -534,7 +538,7 @@ void KeyChainBridge::showWarning()
 
 void KeyChainBridge::showInfo( QString message )
 {
-  mQGisIface->messageBar()->pushInfo( QString( tr( "%1 plugin info" ) ).arg( name() ), message );
+  mQGisIface->messageBar()->pushMessage( QString( tr( "%1 plugin info" ) ).arg( name() ), message, QgsMessageBar::INFO, MESSAGE_BAR_INFO_TIMEOUT );
   debug( message );
 }
 
