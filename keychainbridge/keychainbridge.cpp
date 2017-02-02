@@ -60,7 +60,6 @@
 
 
 static const QString sName = QObject::tr( "KeyChain" );
-static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store your master password in your Wallet/KeyChain/Password Manager" );
 static const QString sCategory = QObject::tr( "authentication" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
@@ -70,12 +69,16 @@ const QLatin1String KeyChainBridge::sWalletFolderName( "QGIS" );
 
 #if defined(Q_OS_MAC)
 const QString KeyChainBridge::sWalletDisplayName( "KeyChain" );
+static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store your master password in your KeyChain" );
 #elif defined(Q_OS_WIN)
 const QString KeyChainBridge::sWalletDisplayName( "Password Manager" );
+static const QString sDescription = QObject::tr( "Master Password <-> Password Manager storage plugin. Store your master password in your Password Manager" );
 #elif defined(Q_OS_LINUX)
-const QString KeyChainBridge::sWalletDisplayName( "Wallet" );
+const QString KeyChainBridge::sWalletDisplayName( "Wallet/KeyRing" );
+static const QString sDescription = QObject::tr( "Master Password <-> Wallet/KeyRing storage plugin. Store your master password in your Wallet/KeyRing" );
 #else
 const QString KeyChainBridge::sWalletDisplayName( "Password Manager" );
+static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store your master password in your Wallet/KeyChain/Password Manager" );
 #endif
 
 
@@ -249,16 +252,22 @@ void KeyChainBridge::on_saveMasterPassword_triggered()
 
 void KeyChainBridge::on_deleteMasterPassword_triggered()
 {
-  bool ok = deleteMasterPassword();
-  mMasterPassword = "";
-  setIsDirty( true );
-  if ( ok )
+  if ( QMessageBox::Yes == QMessageBox::question( nullptr,
+                                                 tr( "Delete confirmation" ),
+                                                 tr( "Do you really want to remove the master password from your %1?" ).arg( sWalletDisplayName ),
+                                                 QMessageBox::Yes|QMessageBox::No) )
   {
-    showInfo( tr( "The master password has been successfully removed from your %1." ).arg( sWalletDisplayName ) );
-  }
-  else
-  {
-    showWarning();
+    bool ok = deleteMasterPassword();
+    mMasterPassword = "";
+    setIsDirty( true );
+    if ( ok )
+    {
+      showInfo( tr( "The master password has been successfully removed from your %1." ).arg( sWalletDisplayName ) );
+    }
+    else
+    {
+      showWarning();
+    }
   }
 }
 
