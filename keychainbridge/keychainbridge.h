@@ -82,106 +82,109 @@ class KeyChainBridge: public QObject, public QgisPlugin
     * Called when a password has been verify (or not)
     * @param verified The state of password's verification
     */
-   void masterPasswordVerified( bool verified );
+    void masterPasswordVerified( bool verified );
 
-   //! Capture the master password from the credentials dialog
-   void credentialsDialogAccepted();
+    //! Capture the master password from the credentials dialog
+    void credentialsDialogAccepted();
 
-   //! Delete master password from wallet
-   void on_deleteMasterPassword_triggered();
+    //! Delete master password from wallet
+    void on_deleteMasterPassword_triggered();
 
-   //! Save master password in the wallet
-   void on_saveMasterPassword_triggered();
+    //! Save master password in the wallet
+    void on_saveMasterPassword_triggered();
 
-   //! Toggle plugin functions ( saved in the settings )
-   void on_useWallet_changed();
+    //! Toggle plugin functions ( saved in the settings )
+    void on_useWallet_changed();
 
-   //! Toggle plugin logging ( saved in the settings )
-   void on_loggingEnabled_changed();
+    //! Toggle plugin logging ( saved in the settings )
+    void on_loggingEnabled_changed();
 
   protected:
 
-   bool eventFilter(QObject *obj, QEvent *event) override;
+    bool eventFilter( QObject *obj, QEvent *event ) override;
 
   private:
 
-   //! Print a debug message in QGIS
-   void debug(QString msg);
+    //! Print a debug message in QGIS
+    void debug( QString msg );
 
-   //! Read settings
-   void readSettings();
+    //! Read settings
+    void readSettings();
 
-   //! Write settings
-   void writeSettings();
+    //! Write settings
+    void writeSettings();
 
-   //! Plugin is enabled and authmanager too
-   bool pluginIsEnabled();
+    //! Plugin is enabled and authmanager too
+    bool pluginIsEnabled();
 
-   //! Ask the user if he wants to store the master password
-   void askSaveMasterPassword(QString message);
+    //! Ask the user if he wants to store the master password
+    void askSaveMasterPassword( QString message );
 
-   //! Cached master password getter
-   QString masterPassword() { return mMasterPassword; }
+    //! Cached master password getter
+    QString masterPassword() { return mMasterPassword; }
 
-   //! Check if password is the same as in auth manager
-   //! This method will only return something meaningful if the auth manager password is set
-   //! (check it with QgsAuthManager::instance()->masterPasswordIsSet())
-   bool passwordIsSame(QString password);
+    //! Check if password is the same as in auth manager
+    //! This method will only return something meaningful if the auth manager password is set
+    //! (check it with QgsAuthManager::instance()->masterPasswordIsSet())
+    bool passwordIsSame( QString password );
 
-   //! Read Master password from the wallet
-   QString readMasterPassword();
+    //! Read Master password from the wallet
+    QString readMasterPassword();
 
-   //! Delete master password from wallet
-   bool deleteMasterPassword();
+    //! Delete master password from wallet
+    bool deleteMasterPassword();
 
-   //! Store Master password in the wallet
-   bool storeMasterPassword(QString password);
+    //! Store Master password in the wallet
+    bool storeMasterPassword( QString password );
 
-   //! Error message setter
-   void setErrorMessage(QString errorMessage) { mErrorMessage = errorMessage; }
+    //! Error message setter
+    void setErrorMessage( QString errorMessage ) { mErrorMessage = errorMessage; }
 
-   //! Error message getter
-   QString errorMessage() { return mErrorMessage; }
+    //! Error message getter
+    QString errorMessage() { return mErrorMessage; }
 
-   //! Clear error code and message
-   void clearErrors();
+    //! Clear error code and message
+    void clearErrors();
 
-   //! Use wallet  getter
-   bool useWallet() { return mUseWallet; }
+    //! Use wallet  getter
+    bool useWallet() { return mUseWallet; }
 
-   //! Use wallet setter
-   void setUseWallet( bool useWallet ) { mUseWallet = useWallet; }
+    //! Use wallet setter
+    void setUseWallet( bool useWallet ) { mUseWallet = useWallet; }
 
-   //! Logging getter
-   bool loggingEnabled() { return mLoggingEnabled; }
+    //! Logging getter
+    bool loggingEnabled() { return mLoggingEnabled; }
 
-   //! Logging setter
-   void setLoggingEnabled( bool loggingEnabled ) { mLoggingEnabled = loggingEnabled; }
+    //! Logging setter
+    void setLoggingEnabled( bool loggingEnabled ) { mLoggingEnabled = loggingEnabled; }
 
-   //! Error code setter
-   void setErrorCode(QKeychain::Error errorCode) { mErrorCode = errorCode; }
+    //! Error code setter
+    void setErrorCode( QKeychain::Error errorCode ) { mErrorCode = errorCode; }
 
-   //! Error code getter
-   QKeychain::Error errorCode() { return mErrorCode; }
+    //! Error code getter
+    QKeychain::Error errorCode() { return mErrorCode; }
 
-   //! Dirty flag setter
-   void setIsDirty( bool dirty ) { mIsDirty = dirty; }
+    //! Dirty flag setter
+    void setIsDirty( bool dirty ) { mIsDirty = dirty; }
 
-   //! Dirty flag getter
-   bool isDirty( ) { return mIsDirty; }
+    //! Dirty flag getter
+    bool isDirty( ) { return mIsDirty; }
 
-   //! Ask the user, and then store
-   void saveMasterPassword();
+    //! Ask the user, and then store
+    void saveMasterPassword();
 
-   //! Show an error to the user
-   void showError();
+    //! Show an error to the user (currently not used in favour of warnings)
+    void showError();
 
-   //! Process the error: show it and/or disable the wallet system in case of
-   //! access denied or no backend
-   void processError();
+    //! Show a warning to the user
+    void showWarning();
 
-   //! Show an info to the user
-   void showInfo(QString message);
+    //! Process the error: show it and/or disable the wallet system in case of
+    //! access denied or no backend
+    void processError();
+
+    //! Show an info to the user
+    void showInfo( QString message );
 
     ////////////////////////////////////////////////////////////////////
     //
