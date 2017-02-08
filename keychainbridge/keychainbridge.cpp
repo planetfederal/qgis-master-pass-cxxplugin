@@ -63,7 +63,7 @@
 // Timeout for the messagebar info messages, in seconds
 const int MESSAGE_BAR_INFO_TIMEOUT = 10;
 
-static const QString sName = QObject::tr( "KeyChain" );
+static const QString sName = QObject::tr( "Master Password Helper" );
 static const QString sCategory = QObject::tr( "authentication" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
@@ -73,16 +73,16 @@ const QLatin1String KeyChainBridge::sWalletFolderName( "QGIS" );
 
 #if defined(Q_OS_MAC)
 const QString KeyChainBridge::sWalletDisplayName( "KeyChain" );
-static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store your master password in your KeyChain" );
+static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store and retrieve your master password in your KeyChain" );
 #elif defined(Q_OS_WIN)
 const QString KeyChainBridge::sWalletDisplayName( "Password Manager" );
-static const QString sDescription = QObject::tr( "Master Password <-> Password Manager storage plugin. Store your master password in your Password Manager" );
+static const QString sDescription = QObject::tr( "Master Password <-> Password Manager storage plugin. Store and retrieve your master password in your Password Manager" );
 #elif defined(Q_OS_LINUX)
 const QString KeyChainBridge::sWalletDisplayName( "Wallet/KeyRing" );
-static const QString sDescription = QObject::tr( "Master Password <-> Wallet/KeyRing storage plugin. Store your master password in your Wallet/KeyRing" );
+static const QString sDescription = QObject::tr( "Master Password <-> Wallet/KeyRing storage plugin. Store and retrieve your master password in your Wallet/KeyRing" );
 #else
 const QString KeyChainBridge::sWalletDisplayName( "Password Manager" );
-static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store your master password in your Wallet/KeyChain/Password Manager" );
+static const QString sDescription = QObject::tr( "Master Password <-> KeyChain storage plugin. Store and retrieve your master password in your Wallet/KeyChain/Password Manager" );
 #endif
 
 
@@ -163,32 +163,32 @@ void KeyChainBridge::initGui()
 {
 
   // Create the action for tool
-  mAboutAction = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "About KeyChain plugin" ), this );
+  mAboutAction = new QAction( QIcon( ":/keychainbridge/keychainbridge.svg" ), tr( "About plugin" ), this );
   mAboutAction->setObjectName( "KeyChainQActionPointer" );
   // Set the what's this text
   mAboutAction->setWhatsThis( tr( "Store the master password in your %1" ).arg( sWalletDisplayName ) );
   // Connect the action to the run
   connect( mAboutAction, SIGNAL( triggered() ), this, SLOT( about() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mAboutAction );
+  mQGisIface->addPluginToMenu( sName, mAboutAction );
 
   mSaveMasterPasswordAction = new QAction( QIcon( ":/keychainbridge/save.svg" ), tr( "Store/update the master password in your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   connect( mSaveMasterPasswordAction, SIGNAL( triggered() ), this, SLOT( on_saveMasterPassword_triggered() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mSaveMasterPasswordAction );
+  mQGisIface->addPluginToMenu( sName, mSaveMasterPasswordAction );
   mClearMasterPasswordAction = new QAction( QIcon( ":/keychainbridge/trashcan.svg" ), tr( "Clear the master password from your %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   connect( mClearMasterPasswordAction, SIGNAL( triggered() ), this, SLOT( on_deleteMasterPassword_triggered() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mClearMasterPasswordAction );
+  mQGisIface->addPluginToMenu( sName, mClearMasterPasswordAction );
 
   mUseWalletAction = new QAction( tr( "Enable the integration with the %1" ).arg( sWalletDisplayName ), mQGisIface->mainWindow() );
   mUseWalletAction->setCheckable( true );
   mUseWalletAction->setChecked( useWallet( ) );
   connect( mUseWalletAction, SIGNAL( changed() ), this, SLOT( on_useWallet_changed() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mUseWalletAction );
+  mQGisIface->addPluginToMenu( sName, mUseWalletAction );
 
   mLoggingEnabledAction = new QAction( tr( "Enable logging" ), mQGisIface->mainWindow() );
   mLoggingEnabledAction->setCheckable( true );
   mLoggingEnabledAction->setChecked( mLoggingEnabled );
   connect( mLoggingEnabledAction, SIGNAL( changed() ), this, SLOT( on_loggingEnabled_changed() ) );
-  mQGisIface->addPluginToMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mLoggingEnabledAction );
+  mQGisIface->addPluginToMenu( sName, mLoggingEnabledAction );
 
 }
 //method defined in interface

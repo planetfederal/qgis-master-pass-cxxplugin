@@ -36,11 +36,11 @@ KeyChainBridgeGui::KeyChainBridgeGui( QWidget* parent, Qt::WindowFlags fl )
 
   // Note: Translatable strings below
   QString text = format
-                 .arg( tr( "KeyChain Plugin" ) )
+                 .arg( tr( "Master Password Helper Plugin" ) )
                  .arg( tr( "This plugin enables storage and synchronization of the master password with an external wallet." ) )
                  .arg( tr( "The plugin does its best to keep the master password in sync with the one stored in the wallet, but"
                            "in a few cases (like password reset) it will not be able to capture the password from the user input and "
-                           "it will be necessary to enter the master password twice."));
+                           "you will be asked to enter the master password again."));
 
   textBrowser->setHtml( text );
 }
