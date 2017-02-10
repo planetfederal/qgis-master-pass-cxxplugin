@@ -8,11 +8,11 @@ Usage
 
 Store and update master password
 --------------------------------
-In menus, click :menuselection:`Plugins --> Master Password <->Password Manager --> Store/update the master password in your Password Manager`.
+In menus, click :menuselection:`Plugins --> Master Password Helper --> Store/update the master password in your Password Manager`.
 
 .. figure:: img/store_master_password.png
 
-If you have already set a Master Password, but you have not enter it in the current QGIS session, QGIS asks you to type it in.
+If you have already set a Master Password, but you have not entered it in the current QGIS session, QGIS asks you to type it in.
 
 .. figure:: img/enter_master_password.png
 
@@ -26,12 +26,12 @@ If you have already entered the master password in the current QGIS session, a m
 
 .. note::
 
-   If you reset your master password, you must click :menuselection:`Plugins --> Master Password <->Password Manager --> Store/update the master password in your Password Manager` again to update the change in the system's Password Manager.
+   If you reset your master password, you must click :menuselection:`Plugins --> Master Password Helper --> Store/update the master password in your Password Manager` again to update the change in the system's Password Manager.
 
 Clear master password
 ---------------------
 
-To delete the Master Password from the system's Password Manager, click :menuselection:`Plugins --> Master Password <->Password Manager --> Clear the master password from your Password Manager`.
+To delete the Master Password from the system's Password Manager, click :menuselection:`Plugins --> Master Password Helper --> Clear the master password from your Password Manager`.
 
 .. figure:: img/clear_master_password.png
 
@@ -46,7 +46,7 @@ By default, integration with Password Manager is enabled.
 
 .. figure:: img/integration_enabled.png
 
-Click :menuselection:`Plugins --> Master Password <->Password Manager --> Enable integration with Password Manager` once and it will be disabled. A message informs that **"Your Password Manager will not be used anymore to store and retrieve the master password"**.
+Click :menuselection:`Plugins --> Master Password Helper --> Enable integration with Password Manager` once, and it will be disabled. A message informs that **"Your Password Manager will not be used anymore to store and retrieve the master password"**.
 
 .. figure:: img/integration_disabled.png
 
@@ -54,12 +54,12 @@ Click :menuselection:`Plugins --> Master Password <->Password Manager --> Enable
 
    Disabling this option does not remove the master password from the Password Manager.
 
-Click :menuselection:`Plugins --> Master Password <->Password Manager --> Enable integration with Password Manager` again and it will be enabled. A message informs that **"Your Password Manager will be used from now on to store and retrieve the master password"**.
+Click :menuselection:`Plugins --> Master Password Helper --> Enable integration with Password Manager` again, and it will be enabled. A message informs that **"Your Password Manager will be used from now on to store and retrieve the master password"**.
 
 Logging
 -------
 
-The plugin allows you to log its messages. Click :menuselection:`Plugins --> Master Password <->Password Manager --> Enable logging` to turn logging on.
+The plugin allows you to log its messages. Click :menuselection:`Plugins --> Master Password Helper --> Enable logging` to turn logging on.
 
 .. figure:: img/enable_logging.png
 

@@ -1,4 +1,4 @@
-# KeyChain Authmanager Bridge
+# Master Password Helper
 
 This plugin enables storage and synchronization of the master password with
 an external wallet.

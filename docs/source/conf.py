@@ -43,7 +43,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'KeyChain Plugin'
+project = u'Master Password Helper'
 copyright = u'2016, Boundless Spatial'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -176,7 +176,7 @@ html_theme_path = ['../themes']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'keychainplugin'
+htmlhelp_basename = 'masterpasswordhelper'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -222,8 +222,8 @@ latex_documents = [
 
 # Substitutions
 rst_epilog = """
-.. |BLQGIS| replace:: *Bouldless Desktop*
-.. |current_plugin| replace:: *KeyChain Plugin*
+.. |BLQGIS| replace:: *Boundless Desktop*
+.. |current_plugin| replace:: *Master Password Helper*
 """
 
 
@@ -232,7 +232,7 @@ rst_epilog = """
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'keychainplugin', u'KeyChain Plugin Documentation',
+    ('index', 'masterpasshelper', u'Master Password Helper Documentation',
      [u'Boundless'], 1)
 ]
 
@@ -246,8 +246,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'keychainplugin', u'KeyChain Plugin Documentation',
-   u'Boundless', u'keychainplugin', "C++ plugin to store QGIS master password in OS's KeyChain/Wallet.",
+  ('index', 'masterpasshelper', u'Master Password Helper Documentation',
+   u'Boundless', u'masterpasshelper', "C++ plugin to store QGIS's master password in the user's OS KeyChain/Wallet.",
    'Authentication'),
 ]
 
