@@ -13,14 +13,11 @@
 #include "qgscontexthelp.h"
 #include "qgsapplication.h"
 
+//qt includes
 #include <QDesktopServices>
 #include <QUrl>
 #include <QSettings>
 
-//qt includes
-
-//standard includes
-const QString KeyChainBridgeGui::sContextId = "master_password_helper";
 
 KeyChainBridgeGui::KeyChainBridgeGui( QWidget* parent, Qt::WindowFlags fl )
     : QDialog( parent, fl )
@@ -69,5 +66,5 @@ void KeyChainBridgeGui::on_buttonBox_helpRequested()
 {
   // Expects a local file path
   QSettings settings;
-  QDesktopServices::openUrl( QUrl::fromLocalFile( settings.value( "plugins/master_password_helper/help_uri", QgsApplication::pkgDataPath() + "/doc/" + sContextId + "/index.html" ).toString( ) ) );
+  QDesktopServices::openUrl( QUrl::fromLocalFile( settings.value( "plugins/master_password_helper/help_uri", QgsApplication::pkgDataPath() + "/doc/master_password_helper/index.html" ).toString( ) ) );
 }

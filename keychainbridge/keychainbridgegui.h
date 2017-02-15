@@ -25,9 +25,6 @@ class KeyChainBridgeGui : public QDialog, private Ui::KeyChainBridgeGuiBase
     KeyChainBridgeGui( QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     ~KeyChainBridgeGui();
 
-  private:
-    static const QString sContextId;
-
   private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
