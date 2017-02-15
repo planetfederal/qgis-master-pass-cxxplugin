@@ -70,3 +70,22 @@ and the user will need to enter the password again.
 If the password stored in the walled is no longer valid, the new password will
 be stored automatically when the user enters it in the standard credentials
 dialog.
+
+
+## Plugin Help Configuration
+
+The plugin documentation can be found in the `doc` directory, whether and where
+to install it is a choice for the packagers, the plugin help button will try to
+open an HTML page located by default in `QgsApplication::pkgDataPath() + "/doc/master_password_helper/index.html"`
+(on Linux, it is normally `/usr/share/qgis/doc/master_password_helper/index.html`),
+this location can be customized with a settings entry `plugins/master_password_helper/help_uri`,
+like in the (Python) example below:
+
+```
+settings = QSettings()
+settings.setValue("plugins/master_password_helper/help_uri", "/usr/mydocs/password_helper/index.html")
+```
+
+
+
+

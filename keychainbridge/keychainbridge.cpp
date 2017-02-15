@@ -191,12 +191,6 @@ void KeyChainBridge::initGui()
   mQGisIface->addPluginToMenu( sName, mLoggingEnabledAction );
 
 }
-//method defined in interface
-void KeyChainBridge::help()
-{
-  // FIXME: implement!
-  QMessageBox::information( nullptr, "To be completed", "To be completed" );
-}
 
 /*
  * Here the verified password is stored into the wallet and

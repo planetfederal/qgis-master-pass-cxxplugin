@@ -73,9 +73,6 @@ class KeyChainBridge: public QObject, public QgisPlugin
     //! unload the plugin
     void unload() override;
 
-    //! show the help document
-    void help();
-
   private slots:
 
     /**
