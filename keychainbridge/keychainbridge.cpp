@@ -67,7 +67,7 @@ static const QString sName = QObject::tr( "Master Password Helper" );
 static const QString sCategory = QObject::tr( "authentication" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
-static const QString sPluginIcon = ":/keychainbridge/keychainbridge.png";
+static const QString sPluginIcon = ":/keychainbridge/keychainbridge.svg";
 const QLatin1String KeyChainBridge::sMasterPasswordName( "QGIS-Master-Password" );
 const QLatin1String KeyChainBridge::sWalletFolderName( "QGIS" );
 
