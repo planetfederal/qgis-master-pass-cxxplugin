@@ -584,6 +584,7 @@ void KeyChainBridge::unload()
   // Remove event filter
   QgsCredentialDialog* credentials = dynamic_cast<QgsCredentialDialog*>( QgsCredentials::instance() );
   credentials->removeEventFilter( this );
+  disconnect( credentials, SIGNAL( accepted() ), this, SLOT( credentialsDialogAccepted() ) );
   delete mUseWalletAction;
   delete mLoggingEnabledAction;
   delete mSaveMasterPasswordAction;
