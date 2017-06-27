@@ -574,11 +574,11 @@ void KeyChainBridge::unload()
     return;
   }
   // remove the GUI
-  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mAboutAction );
-  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mUseWalletAction );
-  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mLoggingEnabledAction );
-  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mSaveMasterPasswordAction );
-  mQGisIface->removePluginMenu( tr( "&Master Password <-> %1" ).arg( sWalletDisplayName ), mClearMasterPasswordAction );
+  mQGisIface->removePluginMenu( sName, mAboutAction );
+  mQGisIface->removePluginMenu( sName, mUseWalletAction );
+  mQGisIface->removePluginMenu( sName, mLoggingEnabledAction );
+  mQGisIface->removePluginMenu( sName, mSaveMasterPasswordAction );
+  mQGisIface->removePluginMenu( sName, mClearMasterPasswordAction );
   // Disconnect all signals
   disconnect( this, 0, 0, 0 );
   // Remove event filter
