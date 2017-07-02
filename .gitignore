@@ -2,3 +2,4 @@ build*/
 docs/build/
 master-password-helper-plugin/
 *.zip
+*.tar*
